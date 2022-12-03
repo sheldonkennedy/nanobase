@@ -2,17 +2,21 @@
 
 Nanobase is a fast, lightweight relational database PHP class.
 
-## Use Cases
+
+Use cases
+---
 
 Nanobase was designed for simple tasks where speed and memory management are high priorities.
 
-Typical uses:
+**Some typical uses:**
 
 1) Registering and signing-in website users.
 2) Storing and reading customer information.
 3) Keeping track of purchase order information.
 
-## How It Works
+
+How it works
+---
 
 ### Plain text files
 
@@ -37,19 +41,23 @@ An entry is converted to a list (array) automatically when you append an item.
 
 ### Performance
 
-Data are stored in fixed-width format, using a pipe to separate the key from the value and an underscore to pad the value when needed. Fixed-width format makes the data positions predictable which massively increases search performance (because PHP can calculate exactly where data will be, the file pointer can quickly move to any entry in a file).
+Data are stored in fixed-width format, using a pipe to separate the key from the value and an underscore to pad the value when needed. Fixed-width format makes the data positions predictable which massively increases search performance (because PHP knows exactly where data will be, the file pointer can quickly move to any entry in a file).
 
 Nanobase can search a typical table with 1,000,000 records and four columns in under three seconds.
 
 ### Memory efficiency
 
-Data are read and written using the *SplFileObject* class from the *Standard PHP Library*. *SplFileObject* lets Nanobase iterate its files without having to first load all the file contents into server memory. This makes memory overhead trivial and allows large amounts of data to be stored without having to worry about memory capacity.
+Data are read and written using the `SplFileObject` class from the *Standard PHP Library*. `SplFileObject` lets Nanobase iterate its files without having to first load all the file contents into server memory. This makes memory overhead trivial and allows large amounts of data to be stored without having to worry about memory capacity.
 
-## Installation
+
+Installation
+---
 
 Download the source files manually and drop them in your project.
 
-## Usage
+
+Usage
+---
 
 For a quick demo, use this PHP code:
 
@@ -61,6 +69,8 @@ $result = $db->read();
 print_r($result);
 ```
 
-## Contact
+
+Contact
+---
 
 Feel free to mail me on sheldonkennedy@gmail.com. I'll respond as soon as I can.

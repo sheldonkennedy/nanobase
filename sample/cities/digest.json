@@ -1,0 +1,14 @@
+[
+    {
+        "name": "city",
+        "capacity": 41
+    },
+    {
+        "name": "iso2",
+        "capacity": 2
+    },
+    {
+        "name": "iso3",
+        "capacity": 3
+    }
+]

@@ -53,7 +53,7 @@ Download the source files manually and drop them in your project.
 
 For a quick demo, use this PHP code:
 
-```
+```php
 $db = new Nanobase('path/to/sample', 'cities');
 $db->search('cape town');
 $result = $db->read();

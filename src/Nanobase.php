@@ -894,7 +894,6 @@ class Nanobase {
 
                 $file = $this->columns[$columnName];
                 $file->rewind();
-                $file->fseek(0);
 
                 while ($file->valid()):
 
@@ -975,7 +974,6 @@ class Nanobase {
                 $fullCapacity = $capacity + 11;
 
                 $file = $this->columns[$columnName];
-                $file->rewind();
                 $file->fseek(0, SEEK_END);
                 $isWrite = $file->fwrite($fullEntry, $fullCapacity);
 

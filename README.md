@@ -1,6 +1,6 @@
 # Nanobase
 
-Nanobase is a fast, lightweight relational database class for PHP, providing a simple data management solution designed for tasks where performance, memory efficiency, portability and flexibility are the priorities.
+Nanobase is a fast, lightweight relational database class for PHP, providing a simple data management solution for tasks where performance, memory efficiency, portability and flexibility are the priorities.
 
 **Please note: This is a class, not a replacement for an actual database.**
 

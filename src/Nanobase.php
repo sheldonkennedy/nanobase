@@ -8,7 +8,7 @@
  *
  * @author    Sheldon Kennedy (sheldonkennedy@gmail.com)
  * @copyright 2022 Sheldon Kennedy
- * @version   0.1
+ * @version   0.2
  *
  * This program is distributed without any warranty or the implied warranty of fitness for a
  * particular purpose.
@@ -233,13 +233,6 @@ class Nanobase {
                 $columnPath = $this->tablePath . $columnDetails['name'] . '.db';
 
                 $column = new SplFileObject($columnPath, 'r+');
-                $isLock = $this->lock($column);
-
-                if (!$isLock):
-
-                    throw new Exception('Column could not be locked', 400);
-
-                endif;
 
                 $this->columns[$columnDetails['name']] = $column;
 
@@ -872,6 +865,14 @@ class Nanobase {
 
             endforeach;
 
+            foreach ($this->columns as $column):
+
+                $isLock = $this->lock($column);
+
+                if (!$isLock) throw new Exception('Column could not be locked', 400);
+
+            endforeach;
+
             $this->loadTable();
             $this->loadColumns();
             $this->loadOperationColumns(array_keys($newEntries));
@@ -1036,6 +1037,14 @@ class Nanobase {
             $capacity        = null;
             $columnPositions = [];
 
+            foreach ($this->columns as $column):
+
+                $isLock = $this->lock($column);
+
+                if (!$isLock) throw new Exception('Column could not be locked', 400);
+
+            endforeach;
+
             /**
              * Check every column entry is eligible for the operation before committing.
              */
@@ -1154,6 +1163,14 @@ class Nanobase {
             $key             = null;
             $position        = null;
             $file            = null;
+
+            foreach ($this->columns as $column):
+
+                $isLock = $this->lock($column);
+
+                if (!$isLock) throw new Exception('Column could not be locked', 400);
+
+            endforeach;
 
             foreach ($this->operationColumns as $operationColumn):
 
@@ -1326,6 +1343,14 @@ class Nanobase {
 
             if (!$this->positions) throw new Exception('Record could not be found', 404);
 
+            foreach ($this->columns as $column):
+
+                $isLock = $this->lock($column);
+
+                if (!$isLock) throw new Exception('Column could not be locked', 400);
+
+            endforeach;
+
             $this->loadOperationColumns($operationColumns);
 
             $columnName      = null;
@@ -1474,6 +1499,14 @@ class Nanobase {
 
             $this->tablePath = $this->databasePath . $this->tableName . '/';
 
+            foreach ($this->columns as $column):
+
+                $isLock = $this->lock($column);
+
+                if (!$isLock) throw new Exception('Column could not be locked', 400);
+
+            endforeach;
+
             /**
              * Make the folder.
              */
@@ -1553,6 +1586,14 @@ class Nanobase {
                 throw new Exception('Column already exists', 400);
 
             endif;
+
+            foreach ($this->columns as $column):
+
+                $isLock = $this->lock($column);
+
+                if (!$isLock) throw new Exception('Column could not be locked', 400);
+
+            endforeach;
 
             file_put_contents($columnPath, '');
 

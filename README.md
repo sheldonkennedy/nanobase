@@ -8,17 +8,31 @@ Nanobase is a fast, lightweight relational database class for PHP, providing a s
 Typical use cases
 ---
 
-1) Registering and signing-in users on a website.
+1) Registering and authenticating users on a website.
 2) Storing and reading customer information.
 3) Keeping track of purchase orders.
 
 **A typical Nanobase record might look like this:**
 
-```json
+```
 Name: John Smith
 Email: example@example.com
 Address: 158 Kloof Street, Gardens, Cape Town, 8001
 Role: Manager
+```
+
+
+Usage
+---
+
+Use this PHP code for a quick demo. The first argument ('path/to/sample') should point to the folder 'sample' in this repo.
+
+```php
+$db = new Nanobase('path/to/sample', 'cities');
+$db->search('cape town');
+$result = $db->read();
+
+print_r($result);
 ```
 
 
@@ -68,21 +82,7 @@ Before any write operation, all columns are locked using PHP `flock` to avoid an
 Installation
 ---
 
-Download the source files manually and drop them into your project.
-
-
-Usage
----
-
-For a quick demo, use this PHP code:
-
-```php
-$db = new Nanobase('path/to/sample', 'cities');
-$db->search('cape town');
-$result = $db->read();
-
-print_r($result);
-```
+Download `src/Nanobase.php` and drop it into your project. It's that simple.
 
 
 Contact

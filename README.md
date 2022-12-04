@@ -29,7 +29,7 @@ The 8-digit key on the left of each row links entries across files to form a uni
 
 ### 1. Performance
 
-Data are stored in fixed-width format, using a pipe to separate the key from the value and an underscore to pad the value when needed. Fixed-width format makes the data positions in the file predictable which massively increases search performance (because we know exactly where all entries begin, we can quickly move the file pointer to any entry in a file).
+Data are stored in fixed-width format, using a pipe to separate the key from the value and an underscore to pad the value when needed. Fixed-width format makes the data positions in the file predictable which massively increases search performance (because we know exactly where all entries begin, we can quickly move the file pointer to any entry in the file).
 
 Nanobase can search a typical table with 1,000,000 records across four columns in about three seconds.
 
@@ -164,6 +164,7 @@ Roadmap
 - Optional column types.
 - Optional unique entries per column.
 - Export tables to portable formats.
+- Backup/archive tables.
 - Clean up deleted entries to improve performance.
 - Build SaaS with API.
 

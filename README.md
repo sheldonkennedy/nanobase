@@ -1,18 +1,25 @@
 # Nanobase
 
-Nanobase is a fast, lightweight relational database PHP class.
+Nanobase is a fast, lightweight relational database class for PHP, providing a simple data management solution designed for tasks where performance, memory efficiency, portability and flexibility are the priorities.
+
+**Please note: This is a class, not a replacement for an actual database.**
 
 
-Use cases
+Typical use cases
 ---
 
-Nanobase was designed for simple tasks where performance, memory efficiency, portability and flexibility are the priorities.
-
-**Some typical uses:**
-
-1) Registering and signing-in website users.
+1) Registering and signing-in users on a website.
 2) Storing and reading customer information.
-3) Keeping track of purchase order information.
+3) Keeping track of purchase orders.
+
+**A typical Nanobase record might look like this:**
+
+```json
+Name: John Smith
+Email: example@example.com
+Address: 158 Kloof Street, Gardens, Cape Town, 8001
+Role: Manager
+```
 
 
 How it works
@@ -33,7 +40,7 @@ The 8-digit key links entries across files.
 
 ### Performance
 
-Data are stored in fixed-width format, using a pipe to separate the key from the value and an underscore to pad the value when needed. Fixed-width format makes the data positions predictable which massively increases search performance (because PHP knows exactly where data will be, the file pointer can quickly move to any entry in a file).
+Data are stored in fixed-width format, using a pipe to separate the key from the value and an underscore to pad the value when needed. Fixed-width format makes the data positions in the file predictable which massively increases search performance (because PHP knows exactly where data will be, the file pointer can quickly move to any entry in a file).
 
 Nanobase can search a typical table with 1,000,000 records across four columns in about three seconds.
 
@@ -43,7 +50,7 @@ Data are read and written using the `SplFileObject` class from the *Standard PHP
 
 ### Portability
 
-Nanobase assets are nothing more than folders and text files, so relocating, duplicating and backing up a database is dead simple.
+Nanobase assets are nothing more than folders and text files, so relocating, duplicating and backing up are dead simple.
 
 ### Flexibility
 
@@ -55,12 +62,13 @@ An entry is converted to a list (array) automatically when you append an item.
 
 ### Integrity
 
-Before any write operation, all columns are locked using PHP `flock` to avoid any possible (even if unlikely) collisions.
+Before any write operation, all columns are locked using PHP `flock` to avoid any possible (even if very unlikely) collisions.
+
 
 Installation
 ---
 
-Download the source files manually and drop them in your project.
+Download the source files manually and drop them into your project.
 
 
 Usage

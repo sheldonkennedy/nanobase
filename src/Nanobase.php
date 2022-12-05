@@ -8,7 +8,7 @@
  *
  * @author    Sheldon Kennedy (sheldonkennedy@gmail.com)
  * @copyright 2022 Sheldon Kennedy
- * @version   0.2
+ * @version   0.2.2
  *
  * This program is distributed without any warranty or the implied warranty of fitness for a
  * particular purpose.
@@ -189,7 +189,7 @@ class Nanobase {
 
         } catch (Exception $exception) {
 
-            if (!$this->isReport) die(false);
+            if (!$this->isReport) return false;
 
             $this->handleException($exception);
         }
@@ -240,7 +240,7 @@ class Nanobase {
 
         } catch (Exception $exception) {
 
-            if (!$this->isReport) die(false);
+            if (!$this->isReport) return false;
 
             $this->handleException($exception);
         }
@@ -309,7 +309,7 @@ class Nanobase {
 
         } catch (Exception $exception) {
 
-            if (!$this->isReport) die(false);
+            if (!$this->isReport) return false;
 
             $this->handleException($exception);
         }
@@ -377,7 +377,7 @@ class Nanobase {
 
         } catch (Exception $exception) {
 
-            if (!$this->isReport) die(false);
+            if (!$this->isReport) return false;
 
             $this->handleException($exception);
         }
@@ -579,7 +579,7 @@ class Nanobase {
 
         } catch (Exception $exception) {
 
-            if (!$this->isReport) die(false);
+            if (!$this->isReport) return false;
 
             $this->handleException($exception);
         }
@@ -784,7 +784,7 @@ class Nanobase {
      *
      * @return array|null
      */
-    function read(): ?array {
+    function read(): array|false {
 
         try {
 
@@ -792,11 +792,13 @@ class Nanobase {
 
             $this->loadEntries();
 
+            if (!$this->entries) return false;
+
             foreach ($this->entries as $entry) return $entry;
 
         } catch (Exception $exception) {
 
-            if (!$this->isReport) die(false);
+            if (!$this->isReport) return false;
 
             $this->handleException($exception);
         }
@@ -811,7 +813,7 @@ class Nanobase {
      *
      * @return array|null
      */
-    function list(string $entry = null): ?array {
+    function list(string $entry = null): array|false {
 
         try {
 
@@ -819,11 +821,13 @@ class Nanobase {
 
             $this->loadEntries();
 
+            if (!$this->entries) return false;
+
             return $this->entries;
 
         } catch (Exception $exception) {
 
-            if (!$this->isReport) die(false);
+            if (!$this->isReport) return false;
 
             $this->handleException($exception);
         }
@@ -985,7 +989,7 @@ class Nanobase {
 
         } catch (Exception $exception) {
 
-            if (!$this->isReport) die(false);
+            if (!$this->isReport) return false;
 
             $this->handleException($exception);
         }
@@ -1109,7 +1113,7 @@ class Nanobase {
 
         } catch (Exception $exception) {
 
-            if (!$this->isReport) die(false);
+            if (!$this->isReport) return false;
 
             $this->handleException($exception);
         }
@@ -1298,7 +1302,7 @@ class Nanobase {
 
         } catch (Exception $exception) {
 
-            if (!$this->isReport) die(false);
+            if (!$this->isReport) return false;
 
             $this->handleException($exception);
         }
@@ -1472,7 +1476,7 @@ class Nanobase {
 
         } catch (Exception $exception) {
 
-            if (!$this->isReport) die(false);
+            if (!$this->isReport) return false;
 
             $this->handleException($exception);
         }
@@ -1529,7 +1533,7 @@ class Nanobase {
 
         } catch (Exception $error) {
 
-            if (!$this->isReport) die(false);
+            if (!$this->isReport) return false;
 
             $this->handleException($exception);
         }
@@ -1629,7 +1633,7 @@ class Nanobase {
 
         } catch (Exception $exception) {
 
-            if (!$this->isReport) die(false);
+            if (!$this->isReport) return false;
 
             $this->handleException($exception);
         }

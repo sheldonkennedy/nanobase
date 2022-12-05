@@ -1409,7 +1409,11 @@ class Nanobase {
 
                     endif;
 
-                    if (!$entryKey) throw new Exception('Entry item could not be found', 404);
+                    if (is_int($entryKey) && !$entryKey):
+
+                        throw new Exception('Entry item could not be found', 404);
+
+                    endif;
 
                 endforeach;
 

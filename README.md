@@ -119,25 +119,71 @@ Array
 
 ## 4. Public methods
 
+More detailed comments are available in the Nanobase class.
+
 ```php
+// return a short JSON report, or bool on exception
+
 $db->throw(bool $isReport = true);
 
+```
+
+```php
+// make a new table using constructor argument 2 as the name
+
 $db->makeTable();
+```
+
+```php
+// make a new column in the table with max. character length (hard limit is 100)
+
 $db->makeColumn(string $columnName, int $capacity = null);
+```
+
+```php
+// make a new record with each column name and value as a key/value pair
+
 $db->make(array $newEntries);
+```
+
+```php
 
 $db->search(
-    string $term = null,
-    array $columns = [],
-    int $limit = 1,
-    bool $isWhole = false,
-    bool $isCase = false
+    string $term    = null,  // phrase to search for (search for all by default)
+    array  $columns = [],    // columns to search through (search through all by default)
+    int    $limit   = 1,     // max. number of records to find (hard limit is 100)
+    bool   $isWhole = false, // match search phrase to entire column entry, or partial match
+    bool   $isCase  = false  // case-sensitive, or case-insensitive phrase match
 );
+```
+
+```php
+// overwrite the found column entries, else create a new entry
+
 $db->update(string $newEntry, array $operationColumns = null);
+```
+
+```php
+// convert the found column entries to a list and append a new item
+
 $db->attach(string $newItem, array $operationColumns = null);
+```
+
+```php
+// remove a list item from the found column entries
+
 $db->detach(string $detachItem, array $operationColumns = null);
+```
+
+```php
+// display the first record found
 
 $result = $db->read();
+```
+
+```php
+// display all records found
+
 $result = $db->list();
 ```
 

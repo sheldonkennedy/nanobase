@@ -2,19 +2,34 @@
 
 Nanobase is a fast, lightweight relational database management class for PHP, providing a simple data management solution for tasks where performance, memory efficiency, portability and flexibility are the priorities.
 
-**Please note:** This is a database management *class*, not a replacement for a full database management system!
+**Please note:** This is a database management *class* that focuses on datapoints, not a replacement for a full database management system!
 
 
-Typical use cases
----
+## Contents
 
-1) Registering and authenticating users on a website.
-2) Storing and reading customer information.
-3) Keeping track of purchase orders.
+1. [Typical use cases](#1-typical-use-cases)
+2. [How it works](#2-how-it-works)
+    - [Performance](#performance)
+    - [Memory efficiency](#memory-efficiency)
+    - [Portability](#portability)
+    - [Flexibility](#flexibility)
+    - [Integrity](#integrity)
+3. [Quick example](#3-quick-example)
+4. [Public methods](#4-public-methods)
+5. [Installation](#5-installation)
+6. [Demo](#6-demo)
+7. [Coming next](#7-coming-next)
+8. [Roadmap](#8-roadmap)
+9. [Contact](#9-contact)
+
+## 1. Typical use cases
+
+- Registering and authenticating users on a website.
+- Storing and reading customer information.
+- Keeping track of purchase orders.
 
 
-How it works
----
+## 2. How it works
 
 Nanobase uses plain text files (with a .db extension) to store data in key/value pairs. Each file contains one column of data in fixed-width format.
 
@@ -27,21 +42,21 @@ Example of a file with three entries:
 
 The 8-digit key on the left of each row links entries across files to form a unique record.
 
-### 1. Performance
+### Performance
 
 Data are stored in fixed-width format, using a pipe to separate the key from the value and an underscore to pad the value when needed. Fixed-width format makes the data positions in the file predictable which massively increases search performance (because we know exactly where all entries begin, we can quickly move the file pointer to any entry in the file).
 
 Nanobase can search a typical table with 1,000,000 records across four columns in about three seconds.
 
-### 2. Memory efficiency
+### Memory efficiency
 
-Data are read and written using the `SplFileObject` class from the *Standard PHP Library*. `SplFileObject` lets Nanobase iterate its files without having to first load all the file contents into server memory. This makes memory overhead trivial and allows large amounts of data to be stored without having to worry about memory overload.
+Data are read and written using the `SplFileObject` class from the *Standard PHP Library*. `SplFileObject` lets Nanobase iterate its files without having to first load all the file contents into server memory. This makes memory overhead trivial and allows large amounts of data to be accessed without having to worry about memory overload.
 
-### 3. Portability
+### Portability
 
 Nanobase assets are nothing more than folders and text files, so relocating, duplicating and backing up are dead simple.
 
-### 4. Flexibility
+### Flexibility
 
 You can add a new column at any time and Nanobase will integrate it seamlessly.
 
@@ -49,21 +64,19 @@ Columns are not typed by default. You can add any UTF-8 character to any column.
 
 An entry is converted to a list (array) automatically when you append an item.
 
-### 5. Integrity
+### Integrity
 
 Before any write operation, all columns are locked using PHP `flock` to avoid any possible (even if very unlikely) collisions.
 
 Reserved and potentially unsafe characters are prevented from writing.
 
 
-Example
----
-
-Manually create a new, empty folder called *database*.
-
-Instantiate the Nanobase class and make a new table called *users* with four columns:
+## 3. Quick example
 
 ```php
+// instantiate the Nanobase class and make a new table called "users" with four columns
+// argument 2 in "makeColumn" sets the maximum character length for column entries
+
 $db = new Nanobase('path/to/database', 'users');
 $db->makeTable();
 $db->makeColumn('userId', 8);
@@ -72,27 +85,26 @@ $db->makeColumn('surname', 20);
 $db->makeColumn('email', 50);
 ```
 
-Add *John* as a user:
-
 ```php
+// add John as a user
+
 $db->make([
-    'userId' => '10000001',
-    'email' => 'example@example.com',
+    'userId'    => '10000001',
+    'email'     => 'example@example.com',
     'firstName' => 'John',
-    'surname' => 'Smith'
+    'surname'   => 'Smith'
 ]);
 ```
 
-Search for *John* in the *firstName* column and display his record:
-
 ```php
+// search for John in the "firstName" column and display the first record found
+
 $db->search('john', ['firstName']);
 $result = $db->read();
-
 print_r($result);
 ```
 
-Result:
+Result
 
 ```php
 Array
@@ -105,11 +117,11 @@ Array
 ```
 
 
-All operations
----
+## 4. Public methods
 
 ```php
-$db = new Nanobase(string $databaseFolder, string $tableName);
+$db->throw(bool $isReport = true);
+
 $db->makeTable();
 $db->makeColumn(string $columnName, int $capacity = null);
 $db->make(array $newEntries);
@@ -122,7 +134,7 @@ $db->search(
     bool $isCase = false
 );
 $db->update(string $newEntry, array $operationColumns = null);
-$db->append(string $newItem, array $operationColumns = null);
+$db->attach(string $newItem, array $operationColumns = null);
 $db->detach(string $detachItem, array $operationColumns = null);
 
 $result = $db->read();
@@ -130,14 +142,12 @@ $result = $db->list();
 ```
 
 
-Installation
----
+## 5. Installation
 
 Download `src/Nanobase.php` and drop it into your project. It's that simple.
 
 
-Demo
----
+## 6. Demo
 
 Use this PHP code for a quick demo. The first argument ('path/to/sample') should point to the folder 'sample' in this repo.
 
@@ -150,26 +160,23 @@ print_r($result);
 ```
 
 
-Coming next
----
+## 7. Coming next
 
 - Tests.
 - Full support for method chaining.
 
 
-Roadmap
----
+## 8. Roadmap
 
 - Optional encryption.
 - Optional column types.
 - Optional unique entries per column.
 - Export tables to portable formats.
 - Backup/archive tables.
-- Clean up deleted entries to improve performance.
+- Method to clean up deleted entries to improve performance.
 - Build SaaS with API.
 
 
-Contact
----
+## 9. Contact
 
 Feel free to mail me on sheldonkennedy@gmail.com. I'll respond as soon as I can.

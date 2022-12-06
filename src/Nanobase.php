@@ -1138,7 +1138,7 @@ class Nanobase {
      *
      * @return bool
      */
-    function append(string $newItem, array $operationColumns = []): bool {
+    function attach(string $newItem, array $operationColumns = []): bool {
 
         try {
 

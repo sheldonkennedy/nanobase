@@ -600,12 +600,14 @@ class Nanobase {
 
         foreach ($columnNames as $columnName):
 
+            $file = $this->columns[$columnName] ?? null;
+            $file->rewind();
+
             foreach ($this->keys as $key):
 
                 $columnPath = null;
                 $digestKey  = null;
                 $capacity   = null;
-                $file       = null;
 
                 $columnPath = $this->tablePath . $columnName . '.db';
                 $digestKey  = array_search($columnName, array_column($this->digest, 'name'));
@@ -615,8 +617,6 @@ class Nanobase {
                  * Search parameter.
                  */
                 $offset = - $capacity - 8;
-
-                $file = $this->columns[$columnName];
 
                 while ($file->valid()):
 

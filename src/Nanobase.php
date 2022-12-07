@@ -617,7 +617,6 @@ class Nanobase {
                 $offset = - $capacity - 8;
 
                 $file = $this->columns[$columnName];
-                $file->rewind();
 
                 while ($file->valid()):
 

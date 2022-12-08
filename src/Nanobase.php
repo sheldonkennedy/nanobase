@@ -2,13 +2,13 @@
 
 /**
  * Nanobase is a fast, lightweight relational database PHP class.
- * PHP Version 8.0+.
+ * PHP Version 8.0.8.
  *
  * @see https://github.com/sheldonkennedy/nanobase/
  *
  * @author    Sheldon Kennedy (sheldonkennedy@gmail.com)
  * @copyright 2022 Sheldon Kennedy
- * @version   0.2.2
+ * @version   0.2.3
  *
  * This program is distributed without any warranty or the implied warranty of fitness for a
  * particular purpose.
@@ -903,7 +903,7 @@ class Nanobase {
                     $file->fseek($offset + $capacity + 3, SEEK_CUR);
                     $key = $file->fread(8);
 
-                    $allKeys[] = $key;
+                    $allKeys[] = (int) $key;
 
                     /**
                      * Reset the search parameter.
@@ -922,7 +922,7 @@ class Nanobase {
             /**
              * Check the new key does not exceed the allowed character length.
              */
-            if (strlen($key) > 8) throw new Exception('Table has reached its key limit', 400);
+            if ($key > 99999999) throw new Exception('Table has reached its key limit', 400);
 
             /**
              * Pad the new key with leading zeros.
@@ -948,7 +948,7 @@ class Nanobase {
                 if (!$compressedEntry):
 
                     throw new Exception(
-                        'Entry is too long for column ' . $columnName . '',
+                        'Entry is too long for column ' . $columnName,
                         400
                     );
 

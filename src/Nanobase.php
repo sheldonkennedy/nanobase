@@ -8,7 +8,7 @@
  *
  * @author    Sheldon Kennedy (sheldonkennedy@gmail.com)
  * @copyright 2022 Sheldon Kennedy
- * @version   0.2.3
+ * @version   0.2.4
  *
  * This program is distributed without any warranty or the implied warranty of fitness for a
  * particular purpose.
@@ -600,49 +600,40 @@ class Nanobase {
 
         foreach ($columnNames as $columnName):
 
+            // $columnPath = $this->tablePath . $columnName . '.db';
+            $digestKey = array_search($columnName, array_column($this->digest, 'name'));
+            $capacity  = $this->digest[$digestKey]['capacity'];
+
             $file = $this->columns[$columnName] ?? null;
             $file->rewind();
 
-            foreach ($this->keys as $key):
+            /**
+             * Search parameter.
+             */
+            $offset = - $capacity - 8;
 
-                $columnPath = null;
-                $digestKey  = null;
-                $capacity   = null;
+            while ($file->valid()):
 
-                $columnPath = $this->tablePath . $columnName . '.db';
-                $digestKey  = array_search($columnName, array_column($this->digest, 'name'));
-                $capacity   = $this->digest[$digestKey]['capacity'];
+                $file->fseek($offset + $capacity + 3, SEEK_CUR);
+                $readKey = $file->fread(8);
+
+                if (in_array($readKey, $this->keys)):
+
+                    $position = $file->ftell() + 1;
+
+                    $this->positions[$columnName][] = [
+                        'key'      => $readKey,
+                        'position' => $position
+                    ];
+
+                endif;
 
                 /**
-                 * Search parameter.
+                 * Reset the search parameter for the next iteration.
                  */
-                $offset = - $capacity - 8;
+                $offset = 0;
 
-                while ($file->valid()):
-
-                    $file->fseek($offset + $capacity + 3, SEEK_CUR);
-                    $readKey = $file->fread(8);
-
-                    if ($key === $readKey):
-
-                        $file->fseek(1, SEEK_CUR);
-                        $position = $file->ftell();
-
-                    endif;
-
-                    /**
-                     * Reset the search parameter for the next iteration.
-                     */
-                    $offset = 0;
-
-                endwhile;
-
-                $this->positions[$columnName][] = [
-                    'key'      => $key,
-                    'position' => $position ?? null
-                ];
-
-            endforeach;
+            endwhile;
 
         endforeach;
     }
@@ -660,19 +651,19 @@ class Nanobase {
 
         foreach ($this->digest as $digestColumn):
 
-            $columnName     = null;
-            $columnPath     = null;
-            $digestKey      = null;
-            $capacity       = null;
-            $columnPosition = [];
+            $columnName      = null;
+            $columnPath      = null;
+            $digestKey       = null;
+            $capacity        = null;
+            $columnPositions = [];
 
-            $columnName     = $digestColumn['name'];
-            $columnPath     = $this->tablePath . $columnName . '.db';
-            $digestKey      = array_search($columnName, array_column($this->digest, 'name'));
-            $capacity       = $this->digest[$digestKey]['capacity'];
-            $columnPosition = $this->positions[$columnName];
+            $columnName      = $digestColumn['name'];
+            $columnPath      = $this->tablePath . $columnName . '.db';
+            $digestKey       = array_search($columnName, array_column($this->digest, 'name'));
+            $capacity        = $this->digest[$digestKey]['capacity'];
+            $columnPositions = $this->positions[$columnName];
 
-            foreach ($columnPosition as $columnPosition):
+            foreach ($columnPositions as $columnPosition):
 
                 $key      = null;
                 $position = null;
@@ -682,7 +673,6 @@ class Nanobase {
                 $position = $columnPosition['position'];
 
                 $file = $this->columns[$columnName];
-                $file->rewind();
                 $file->fseek($position);
                 $readEntry = $file->fread($capacity);
 

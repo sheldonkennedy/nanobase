@@ -16,11 +16,12 @@ Nanobase is a fast, lightweight relational database management class for PHP, pr
     - [Integrity](#integrity)
 3. [Quick example](#3-quick-example)
 4. [Public methods](#4-public-methods)
-5. [Installation](#5-installation)
-6. [Demo](#6-demo)
-7. [Coming next](#7-coming-next)
-8. [Roadmap](#8-roadmap)
-9. [Contact](#9-contact)
+5. [Gotchas](#5-gotchas)
+6. [Installation](#6-installation)
+7. [Demo](#7-demo)
+8. [Coming next](#8-coming-next)
+9. [Roadmap](#9-roadmap)
+10. [Contact](#10-contact)
 
 ## 1. Typical use cases
 
@@ -187,13 +188,17 @@ $result = $db->read();
 $result = $db->list();
 ```
 
+## 5. Gotchas
 
-## 5. Installation
+- The column .db files use the Windows standard `\r\n` ([carriage return + line feed](https://stackoverflow.com/questions/15433188/what-is-the-difference-between-r-n-r-and-n)) invisible characters at the end of each row. If you edit a column file manually, then ensure you follow the same format or you will get misaligned records.
+
+
+## 6. Installation
 
 Download `src/Nanobase.php` and drop it into your project. It's that simple.
 
 
-## 6. Demo
+## 7. Demo
 
 Use this PHP code for a quick demo. The first argument ('path/to/sample') should point to the folder 'sample' in this repo.
 
@@ -206,13 +211,13 @@ print_r($result);
 ```
 
 
-## 7. Coming next
+## 8. Coming next
 
 - Tests.
 - Full support for method chaining.
 
 
-## 8. Roadmap
+## 9. Roadmap
 
 - Optional encryption.
 - Optional column types.
@@ -223,6 +228,6 @@ print_r($result);
 - Build SaaS with API.
 
 
-## 9. Contact
+## 10. Contact
 
 Feel free to mail me on sheldonkennedy@gmail.com. I'll respond as soon as I can.

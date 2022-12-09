@@ -8,7 +8,7 @@
  *
  * @author    Sheldon Kennedy (sheldonkennedy@gmail.com)
  * @copyright 2022 Sheldon Kennedy
- * @version   0.2.4
+ * @version   0.2.5
  *
  * This program is distributed without any warranty or the implied warranty of fitness for a
  * particular purpose.
@@ -67,33 +67,6 @@ class Nanobase {
      * @var array
      */
     public $operationColumns = [];
-
-    /**
-     * Maximum quantity of records to search through.
-     *
-     * @var int
-     */
-    public $limit = 1;
-
-    /**
-     * Whether to match a full or partial search phrase.
-     *
-     * true:  Search for the entire phrase.
-     * false: Perform a substring search within entries for the phrase.
-     *
-     * @var bool
-     */
-    public $isWhole = false;
-
-    /**
-     * Case sensitivity of the search phrase.
-     *
-     * true:  Perform a case-sensitive search.
-     * false: Perform a case-insensitive search.
-     *
-     * @var bool
-     */
-    public $isCase = false;
 
     /**
      * Contains the record keys of entries found during search.
@@ -397,7 +370,12 @@ class Nanobase {
      *
      * @return false|void
      */
-    private function loadKeys(string $term = null) {
+    private function loadKeys(
+        string $term    = null,
+        int    $limit   = 1,
+        bool   $isWhole = false,
+        bool   $isCase  = false
+    ) {
 
         try {
 
@@ -436,19 +414,19 @@ class Nanobase {
                     $file = $this->columns[$columnName];
                     $file->rewind();
 
-                    while ($file->valid() && $count < $this->limit):
+                    while ($file->valid() && $count < $limit):
 
                         $file->fseek($offset + 11, SEEK_CUR);
                         $readEntry = $file->fread($capacity);
 
-                        if ($this->whole):
+                        if ($isWhole):
 
                             /**
                              * Compress the search term for a faster string comparison.
                              */
                             $newEntry = $this->compress($term, $capacity);
 
-                            if (!$this->isCase):
+                            if (!$isCase):
 
                                 if (mb_strtolower($readEntry) === mb_strtolower($newEntry)):
 
@@ -468,7 +446,7 @@ class Nanobase {
 
                         else:
 
-                            if (!$this->isCase):
+                            if (!$isCase):
 
                                 if (
                                     str_contains(
@@ -540,7 +518,7 @@ class Nanobase {
                     $file = $this->columns[$columnName];
                     $file->rewind();
 
-                    while ($file->valid() && $count < $this->limit):
+                    while ($file->valid() && $count < $limit):
 
                         $count ++;
 
@@ -570,7 +548,7 @@ class Nanobase {
             /**
              * Reduce the keys to the limit.
              */
-            if (count($this->keys) > $this->limit) array_pop($this->keys);
+            if (count($this->keys) > $limit) array_pop($this->keys);
 
             /**
              * Renumber the array.
@@ -712,17 +690,44 @@ class Nanobase {
     /** ---------------------------------------------------------------------------------------- */
 
     /**
+     * Count the number of records that contain the search term.
+     *
+     * @param string|null @term    Search term
+     * @param array       @columns Column names to search through
+     * @param bool|false  @isWhole Match the search term to the entire or partial column term
+     * @param bool|false  @isCase  Case-sensitive or case-insensitive search
+     *
+     * @return self
+     */
+    function count(
+        string $term    = null,
+        array  $columns = [],
+        bool   $isWhole = false,
+        bool   $isCase  = false
+    ): int|false {
+
+        if ($this->tablePath):
+
+            $this->loadTable();
+            $this->loadColumns();
+            $this->loadSearchColumns($columns);
+            $this->loadKeys($term, 99999999, $isWhole, $isCase);
+
+        endif;
+
+        return count($this->keys) ?? false;
+    }
+
+    /** ---------------------------------------------------------------------------------------- */
+
+    /**
      * Perform search.
      *
      * @param string|null @term    Search term
-     * @param array       @columns Columns name to search through
+     * @param array       @columns Column names to search through
      * @param int         @limit   Maximum quantity of records to search
-     * @param bool|false  @whole   Match the search term to the entire or partial column term
-     * @param bool|false  @case    Case-sensitive or case-insensitive search
-     *
-     * @promotes $limit
-     * @promotes $isWhole
-     * @promotes $isCase
+     * @param bool|false  @isWhole Match the search term to the entire or partial column term
+     * @param bool|false  @isCase  Case-sensitive or case-insensitive search
      *
      * @return self
      */
@@ -732,41 +737,38 @@ class Nanobase {
         int    $limit   = 1,
         bool   $isWhole = false,
         bool   $isCase  = false
-    ): self {
+    ) {
 
         if ($this->tablePath):
 
             if ($limit < 1):
 
-                $this->limit = 1;
+                $limit = 1;
 
             elseif ($limit > 100):
 
-                $this->limit = 100;
+                $limit = 100;
 
             else:
 
-                $this->limit = $limit;
+                $limit = $limit;
 
             endif;
-
-            $this->whole = $isWhole;
-            $this->isCase  = $isCase;
 
             $this->loadTable();
             $this->loadColumns();
             $this->loadSearchColumns($columns);
-            $this->loadKeys($term);
+            $this->loadKeys($term, $limit, $isWhole, $isCase);
             $this->loadPositions();
 
         endif;
-
-        return $this;
     }
 
     /** ---------------------------------------------------------------------------------------- */
 
     /**
+     * A SEARCH MUST BE RUN FIRST.
+     *
      * Return a single record with no parent key.
      *
      * @throws Exception If a record is not found
@@ -796,6 +798,8 @@ class Nanobase {
     /** ---------------------------------------------------------------------------------------- */
 
     /**
+     * A SEARCH MUST BE RUN FIRST.
+     *
      * Return records with parent keys.
      *
      * @throws Exception If a record is not found
@@ -1386,7 +1390,7 @@ class Nanobase {
                     /**
                      * If the search is case-insensitive.
                      */
-                    if (!$this->isCase):
+                    if (!$isCase):
 
                         $entryKey = array_search(
                             strtolower($detachItem),
@@ -1427,7 +1431,7 @@ class Nanobase {
                     /**
                      * If the search is case-insensitive.
                      */
-                    if (!$this->isCase):
+                    if (!$isCase):
 
                         $entryKey = array_search(
                             strtolower($detachItem),

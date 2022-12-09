@@ -149,6 +149,16 @@ $db->make(array $newEntries);
 
 ```php
 
+$db->count(
+    string $term    = null,  // phrase to search for (search for all by default)
+    array  $columns = [],    // columns to search through (search through all by default)
+    bool   $isWhole = false, // match search phrase to entire column entry, or partial match
+    bool   $isCase  = false  // case-sensitive, or case-insensitive phrase match
+);
+```
+
+```php
+
 $db->search(
     string $term    = null,  // phrase to search for (search for all by default)
     array  $columns = [],    // columns to search through (search through all by default)
